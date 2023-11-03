@@ -102,3 +102,26 @@ def map_timestamp_and_merge(df_A, df_B, columns_to_match):
     merged_df['timestamp'] = pd.to_datetime(merged_df['timestamp'])
 
     return merged_df
+
+def add_day_columns_oh(df: pd.DataFrame, datetime_col: str) -> pd.DataFrame:
+
+    days = df[datetime_col].dt.dayofweek
+    for i in range(7):
+        df[f'day_of_week_{i}'] = days == i
+    return df
+
+def add_day_column(df: pd.DataFrame, datetime_col: str, new_col: str) -> pd.DataFrame:
+    df[new_col] = df[datetime_col].dt.dayofweek
+    return df
+
+def convert_to_single_named_columns(df: pd.DataFrame, separator: str = '_') -> pd.DataFrame:
+    df = df.copy()
+    df.columns = df.columns.map(separator.join)
+    return df
+
+def get_zero_timestamps(df: pd.DataFrame, column: str, year: int = None) -> pd.Series:
+
+    if year:
+        df = df[df['time_stamp___'].dt.year == year]
+
+    return df.loc[df[column] == 0, 'time_stamp___']
