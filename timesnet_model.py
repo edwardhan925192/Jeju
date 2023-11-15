@@ -257,9 +257,9 @@ class Model(nn.Module):
         dec_out = self.projection(enc_out)
 
         dec_out_except_last = dec_out[:, :-1]  # Exclude the last column from dec_out
-	dec_out_except_last = dec_out_except_last * (stdev_except_last[:, 0, :].unsqueeze(1).repeat(
+	dec_out_except_last = dec_out_except_last * (stdev[:, 0, :].unsqueeze(1).repeat(
 	    1, self.pred_len + self.seq_len - 1, 1))
-	dec_out_except_last = dec_out_except_last + (means_except_last[:, 0, :].unsqueeze(1).repeat(
+	dec_out_except_last = dec_out_except_last + (means[:, 0, :].unsqueeze(1).repeat(
 	    1, self.pred_len + self.seq_len - 1, 1))
 	
 	# Combine the denormalized columns with the original last column
