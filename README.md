@@ -12,3 +12,6 @@ merge_on_month_year(df_A, df_B, timestamp_col='timestamp', month_year_col='ê¸°ê°
 map_to_timestamp(df_multiindex)
 map_timestamp_and_merge(df_A, df_B, columns_to_match)
 ```
+
+# TimesNet  
+Last column is not normalized for month 
