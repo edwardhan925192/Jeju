@@ -256,13 +256,14 @@ class Model(nn.Module):
         # project back
         dec_out = self.projection(enc_out)
 
-        # De-Normalization from Non-stationary Transformer
-        dec_out = dec_out * \
-                  (stdev[:, 0, :].unsqueeze(1).repeat(
-                      1, self.pred_len + self.seq_len, 1))
-        dec_out = dec_out + \
-                  (means[:, 0, :].unsqueeze(1).repeat(
-                      1, self.pred_len + self.seq_len, 1))
+        dec_out_except_last = dec_out[:, :-1]  # Exclude the last column from dec_out
+	dec_out_except_last = dec_out_except_last * (stdev_except_last[:, 0, :].unsqueeze(1).repeat(
+	    1, self.pred_len + self.seq_len - 1, 1))
+	dec_out_except_last = dec_out_except_last + (means_except_last[:, 0, :].unsqueeze(1).repeat(
+	    1, self.pred_len + self.seq_len - 1, 1))
+	
+	# Combine the denormalized columns with the original last column
+	dec_out = torch.cat((dec_out_except_last, last_column), dim=-1)
         return dec_out
 
 
